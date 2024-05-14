@@ -22,26 +22,26 @@
 #           projectId: joshinsmolen-a5342
 
 name: Deploy to Firebase Hosting on merge
-
-on: 
+on:
   push:
-    tags:
-      - 'v*'
     branches:
-      - main 
+      - main
 jobs:
   build_and_deploy:
     name: Deploy prod hosting
     runs-on: ubuntu-latest
-    environment: development
     strategy:
       matrix:
         node: [20.11.1]
-    steps: 
-      - uses: actions/checkout@master
-      - uses: actions/setup-node@v1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           node-version: ${{ matrix.node }}
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JOSHINSMOLEN_A5342 }}
+          channelId: live
+          projectId: joshinsmolen-a5342
       - name: Install Firebase Tools
         run: npm install firebase-tools -g
       - name: Install dependencies
@@ -50,17 +50,62 @@ jobs:
         env: 
           SOME_SECRET_KEY: ${{ secrets.SOME_SECRET_KEY }}
         run: npm run build
-      
-      - name: Decoding base64 Credentials
+        
+      - name: Decoding Credentials
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ firebaseServiceAccount }}
         run: echo $GOOGLE_APPLICATION_CREDENTIALS > gcloud.json
         
       - name: Deploy to Firebase
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcloud.json
-        run: firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID }} --project ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: firebase deploy --only hosting:${{ channelId }} --project ${{ projectId }}
 
       - name: Remove credentials file
         if: success() || failure()
         run: rm gcloud.json
+
+
+# name: Deploy to Firebase Hosting on merge
+
+# on: 
+#   push:
+#     tags:
+#       - 'v*'
+#     branches:
+#       - main 
+# jobs:
+#   build_and_deploy:
+#     name: Deploy prod hosting
+#     runs-on: ubuntu-latest
+#     environment: development
+#     strategy:
+#       matrix:
+#         node: [20.11.1]
+#     steps: 
+#       - uses: actions/checkout@master
+#       - uses: actions/setup-node@v1
+#         with:
+#           node-version: ${{ matrix.node }}
+#       - name: Install Firebase Tools
+#         run: npm install firebase-tools -g
+#       - name: Install dependencies
+#         run: npm install
+#       - name: Run build
+#         env: 
+#           SOME_SECRET_KEY: ${{ secrets.SOME_SECRET_KEY }}
+#         run: npm run build
+      
+#       - name: Decoding base64 Credentials
+#         env:
+#           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+#         run: echo $GOOGLE_APPLICATION_CREDENTIALS > gcloud.json
+        
+#       - name: Deploy to Firebase
+#         env:
+#           GOOGLE_APPLICATION_CREDENTIALS: gcloud.json
+#         run: firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID }} --project ${{ secrets.FIREBASE_PROJECT_ID }}
+
+#       - name: Remove credentials file
+#         if: success() || failure()
+#         run: rm gcloud.json
