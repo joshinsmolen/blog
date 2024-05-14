@@ -55,6 +55,9 @@ jobs:
         shell: bash
         run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > credentials.json
         #| base64 --decode > credentials.json
+
+      - name: Display Credentials
+        run: cat credentials.json
       
       - name: Save credentials into environment variables
         run: echo "GOOGLE_APPLICATION_CREDENTIALS=./credentials.json" >> $GITHUB_ENV
