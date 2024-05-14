@@ -19,6 +19,7 @@ jobs:
           channelId: live
           projectId: joshinsmolen-a5342
 
+
 # name: Deploy to Firebase Hosting on merge
 # on:
 #   push:
