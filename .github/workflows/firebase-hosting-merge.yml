@@ -52,7 +52,7 @@ jobs:
         run: npm run build
         
       - name: Display Keys
-        run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}
+        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}"
       
       - name: Decoding base64 Credentials
         shell: bash
