@@ -28,7 +28,7 @@ on:
     tags:
       - 'v*'
     branches:
-      - master
+      - main
 
 jobs:
   build_and_deploy:
