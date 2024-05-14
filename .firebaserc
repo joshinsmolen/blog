@@ -1,15 +1,5 @@
 {
   "projects": {
     "default": "joshinsmolen-a5342"
-  },
-  "targets": {
-    "joshinsmolen-a5342": {
-      "hosting": {
-        "joshinsmolen": [
-          "personal-blog"
-        ]
-      }
-    }
-  },
-  "etags": {}
+  }
 }
