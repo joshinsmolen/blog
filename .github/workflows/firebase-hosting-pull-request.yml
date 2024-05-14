@@ -51,7 +51,25 @@ jobs:
         env: 
           SOME_SECRET_KEY: ${{ secrets.SOME_SECRET_KEY }}
         run: npm run build
-      - name: Run deploy
-        env: 
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
-        run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }} --only hosting:${{ secrets.FIREBASE_HOSTING_ID}} --project ${{ secrets.FIREBASE_PROJECT_ID }}
+      
+      - name: Decoding base64 Credentials
+        shell: bash
+        run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }} | base64 --decode > credentials.json
+      
+      - name: Save credentials into environment variables
+        run: echo "GOOGLE_APPLICATION_CREDENTIALS=./credentials.json" >> $GITHUB_ENV
+
+      - name: Deploy to Firebase
+        shell: bash
+        # Using GOOGLE_APPLICATION_CREDENTIALS env
+        run: |
+          ./node_modules/.bin/firebase deploy --non-interactive
+
+      - name: Remove credentials file
+        if: success() || failure()
+        run: rm credentials.json
+
+      # - name: Run deploy
+      #   env: 
+      #     FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+      #   run: firebase deploy --token ${{ secrets.FIREBASE_TOKEN }} --only hosting:${{ secrets.FIREBASE_HOSTING_ID}} --project ${{ secrets.FIREBASE_PROJECT_ID }}
