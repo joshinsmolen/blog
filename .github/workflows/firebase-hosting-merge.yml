@@ -59,9 +59,7 @@ jobs:
       - name: Deploy to Firebase
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcloud.json
-          FIREBASE_HOSTING_ID: ${{ secrets.FIREBASE_HOSTING_ID }}
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-        run: firebase deploy --only hosting:$FIREBASE_HOSTING_ID --project $FIREBASE_PROJECT_ID
+        run: firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID }} --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
       - name: Remove credentials file
         if: success() || failure()
