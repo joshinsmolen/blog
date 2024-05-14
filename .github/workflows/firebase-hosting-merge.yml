@@ -60,12 +60,13 @@ jobs:
         run: cat credentials.json
       
       - name: Save credentials into environment variables
-        run: echo "GOOGLE_APPLICATION_CREDENTIALS=./credentials.json" >> $GITHUB_ENV
-
+        # run: echo "GOOGLE_APPLICATION_CREDENTIALS=./credentials.json" >> $GITHUB_ENV 
+        run: export GOOGLE_APPLICATION_CREDENTIALS=./credentials.json
+        
       - name: Deploy to Firebase
         shell: bash
         # Using GOOGLE_APPLICATION_CREDENTIALS env
-        run: firebase deploy --non-interactive
+        run: firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID}}
 
       - name: Remove credentials file
         if: success() || failure()
