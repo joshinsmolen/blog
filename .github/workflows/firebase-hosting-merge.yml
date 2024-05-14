@@ -28,12 +28,7 @@ on:
     tags:
       - 'v*'
     branches:
-      - main
-env:
-  GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
-  FIREBASE_HOSTING_ID: ${{ secrets.FIREBASE_HOSTING_ID }}
-  FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
-  
+      - main 
 jobs:
   build_and_deploy:
     name: Deploy prod hosting
@@ -57,12 +52,16 @@ jobs:
         run: npm run build
       
       - name: Decoding base64 Credentials
-        run: echo ${{ env.GOOGLE_APPLICATION_CREDENTIALS }} > gcloud.json
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        run: echo $GOOGLE_APPLICATION_CREDENTIALS > gcloud.json
         
       - name: Deploy to Firebase
         env:
           GOOGLE_APPLICATION_CREDENTIALS: gcloud.json
-        run: firebase deploy --only hosting:${{ env.FIREBASE_HOSTING_ID}} --project ${{ env.FIREBASE_PROJECT_ID }}
+          FIREBASE_HOSTING_ID: ${{ secrets.FIREBASE_HOSTING_ID }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: firebase deploy --only hosting:$FIREBASE_HOSTING_ID --project $FIREBASE_PROJECT_ID
 
       - name: Remove credentials file
         if: success() || failure()
