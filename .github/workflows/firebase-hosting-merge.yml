@@ -53,21 +53,15 @@ jobs:
       
       - name: Decoding base64 Credentials
         shell: bash
-        run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > credentials.json
+        run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > gcloud.json
         #| base64 --decode > credentials.json
-
-      - name: Display Credentials
-        run: cat credentials.json
-      
-      - name: Save credentials into environment variables
-        # run: echo "GOOGLE_APPLICATION_CREDENTIALS=./credentials.json" >> $GITHUB_ENV 
-        run: export GOOGLE_APPLICATION_CREDENTIALS=./credentials.json
         
       - name: Deploy to Firebase
-        shell: bash
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: gcloud.json
         # Using GOOGLE_APPLICATION_CREDENTIALS env
-        run: firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID}}
+        run: firebase deploy --only hosting:${{ secrets.FIREBASE_HOSTING_ID}} --project ${{ secrets.FIREBASE_PROJECT_ID }}
 
       - name: Remove credentials file
         if: success() || failure()
-        run: rm credentials.json
+        run: rm gcloud.json
