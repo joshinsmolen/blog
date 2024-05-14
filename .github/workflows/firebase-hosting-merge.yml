@@ -50,13 +50,11 @@ jobs:
         env: 
           SOME_SECRET_KEY: ${{ secrets.SOME_SECRET_KEY }}
         run: npm run build
-        
-      - name: Display Keys
-        run: echo "${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}"
       
       - name: Decoding base64 Credentials
         shell: bash
-        run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }} | base64 --decode > credentials.json
+        run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }} > credentials.json
+        #| base64 --decode > credentials.json
       
       - name: Save credentials into environment variables
         run: echo "GOOGLE_APPLICATION_CREDENTIALS=./credentials.json" >> $GITHUB_ENV
