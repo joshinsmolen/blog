@@ -53,9 +53,7 @@ jobs:
         run: npm run build
       
       - name: Decoding base64 Credentials
-        shell: bash
-        run: echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' > gcloud.json
-        #| base64 --decode > credentials.json
+        run: echo ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }} > gcloud.json
         
       - name: Deploy to Firebase
         env:
