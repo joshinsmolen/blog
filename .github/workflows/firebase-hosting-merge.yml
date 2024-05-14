@@ -53,7 +53,7 @@ jobs:
       
       - name: Decoding base64 Credentials
         shell: bash
-        run: echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > gcloud.json
+        run: echo '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}' > gcloud.json
         #| base64 --decode > credentials.json
         
       - name: Deploy to Firebase
